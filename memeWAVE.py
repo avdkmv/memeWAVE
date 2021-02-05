@@ -6,7 +6,6 @@ import time
 
 
 client = discord.Client()
-old_meme_link = 'http://example.com'
 
 
 def get_meme_link():
@@ -23,11 +22,14 @@ def get_meme_link():
 
 
 async def send_meme(channel):
-    global old_meme_link
+    with open('memeLink.json', 'r') as file:
+            old_meme_link = json.load(file)
     new_meme_link = get_meme_link()
-    if old_meme_link != new_meme_link:
+    if old_meme_link[0][-183:] != new_meme_link[-183:]:
         await channel.send(new_meme_link)
-        old_meme_link = new_meme_link
+        old_meme_link[0] = new_meme_link
+        with open('memeLink.json', 'w') as file:
+            json.dump(old_meme_link, file, ensure_ascii=False, indent=4)
     time.sleep(config.timeout)
 
 
